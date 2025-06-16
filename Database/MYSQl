@@ -1,0 +1,92 @@
+CREATE DATABASE IF NOT EXISTS STUDENT_PORTAL;
+USE STUDENT_PORTAL;
+
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    email VARCHAR(255) UNIQUE,
+    password VARCHAR(255)
+);
+
+ALTER TABLE users
+ADD COLUMN department VARCHAR(100),
+ADD COLUMN role ENUM('student', 'teacher') NOT NULL,
+ADD COLUMN phone VARCHAR(20),
+ADD COLUMN dob DATE,
+ADD COLUMN gender ENUM('male', 'female'),
+ADD COLUMN address TEXT,
+ADD COLUMN roll_number VARCHAR(20),
+ADD COLUMN batch VARCHAR(20),
+ADD COLUMN image VARCHAR(255);
+
+ALTER TABLE users
+ADD COLUMN salary VARCHAR(100),
+ADD COLUMN designation VARCHAR(100);
+
+
+CREATE TABLE students (
+    user_id INT PRIMARY KEY,
+    department VARCHAR(100),
+    roll_number VARCHAR(50),
+    batch VARCHAR(20),
+    phone VARCHAR(15),
+    dob DATE,
+    gender VARCHAR(10),
+    address TEXT,
+    image VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS teachers (
+    user_id INT PRIMARY KEY,
+	department VARCHAR(100),
+    designation VARCHAR(100),
+    salary INT,
+    phone VARCHAR(15),
+    dob DATE,
+    gender VARCHAR(10),
+    address TEXT,
+    image VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+
+ALTER TABLE users ADD COLUMN qr_code VARCHAR(255);
+ALTER TABLE students ADD COLUMN qr_code VARCHAR(255);
+ALTER TABLE teachers ADD COLUMN qr_code VARCHAR(255);
+
+-- ATTENDANCE TABLE
+CREATE TABLE attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    date DATE NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+ALTER TABLE students ADD COLUMN attendance INT DEFAULT 0;
+DESCRIBE students;
+ALTER TABLE students MODIFY COLUMN attendance TEXT;
+ALTER TABLE teachers ADD COLUMN attendance TEXT;
+ALTER TABLE students ADD course VARCHAR(100);
+ALTER TABLE teachers ADD qualification VARCHAR(50);
+
+
+
+ALTER TABLE users
+MODIFY COLUMN role ENUM('student', 'teacher', 'admin') NOT NULL;
+
+-- You can either store admin in 'users' table with a role
+INSERT INTO users (email, password, role) 
+VALUES ('admin@gmail.com', '213141', 'admin');
+
+
+SELECT * FROM users;
+SELECT * FROM attendance;
+SELECT * FROM students;
+ SELECT * FROM teachers;
+
+
+
